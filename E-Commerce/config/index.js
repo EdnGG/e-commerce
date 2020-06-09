@@ -11,5 +11,5 @@ const config = {
 };
 
 //dbPassword
-
+console.log("Testeando desde config.js:  " + process.env.DB_PASSWORD);
 module.exports = { config };
