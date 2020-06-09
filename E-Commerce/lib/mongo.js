@@ -1,8 +1,17 @@
-const { MongoClient } = require("mongodb");
 const { config } = require("../config");
+const { MongoClient } = require("mongodb");
+
+// console.log("config " + encodeURIComponent(config));
+// console.log("config2 " + config);
+
+// console.log("config con Json.parse " + JSON.parse(config));
+// console.log("config 3 : " + JSON.parse(config));
+
+// console.log("config2 " + config);
 
 const USER = encodeURIComponent(config.dbUser);
 const PASSWORD = encodeURIComponent(config.dbPassword);
+// console.log("PASSWORD " + PASSWORD);
 const DB_NAME = config.dbName;
 
 const MONGO_URI = `mongodb://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/?authSource=${DB_NAME}`;
@@ -12,9 +21,13 @@ const MONGO_URI = `mongodb://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPor
 
 class MongoLib {
   constructor() {
-    console.log(PASSWORD);
-    console.log(MONGO_URI);
-    this.client = new MongoClient(MONGO_URI, { useNewUrlParser: true });
+    console.log("Logueando password " + PASSWORD);
+    console.log("Logueando la URI " + MONGO_URI);
+
+    this.client = new MongoClient(MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     this.dbName = DB_NAME;
   }
 
