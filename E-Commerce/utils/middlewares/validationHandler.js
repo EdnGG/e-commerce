@@ -1,5 +1,11 @@
+const Joi = require("@hapi/joi");
+
 function validate(data, schema) {
-  return false;
+  // const { error } = schema.validate(data);
+  // const { error } = Joi.validate(data, schema);
+  const { error } = Joi.object(schema).validate(data);
+
+  return error;
 }
 
 function validationHandler(schema, check = "body") {
@@ -9,6 +15,4 @@ function validationHandler(schema, check = "body") {
   };
 }
 
-module.exports = {
-  validationHandler,
-};
+module.exports = validationHandler;
