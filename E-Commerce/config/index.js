@@ -10,6 +10,4 @@ const config = {
   dbName: process.env.DB_NAME,
 };
 
-//dbPassword
-console.log("Testeando desde config.js:  " + process.env.DB_PASSWORD);
 module.exports = { config };

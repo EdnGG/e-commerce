@@ -1,29 +1,19 @@
+const { MongoClient, ObjectId } = require("mongodb");
 const { config } = require("../config");
-const { MongoClient } = require("mongodb");
-
-// console.log("config " + encodeURIComponent(config));
-// console.log("config2 " + config);
-
-// console.log("config con Json.parse " + JSON.parse(config));
-// console.log("config 3 : " + JSON.parse(config));
-
-// console.log("config2 " + config);
 
 const USER = encodeURIComponent(config.dbUser);
 const PASSWORD = encodeURIComponent(config.dbPassword);
 // console.log("PASSWORD " + PASSWORD);
 const DB_NAME = config.dbName;
 
-const MONGO_URI = `mongodb://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/?authSource=${DB_NAME}`;
+// const MONGO_URI = `mongodb://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/?authSource=${DB_NAME}`;
 
 // Alternative URI
-// const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${config.dbHost}/test?retryWrites=true&w=majority`;
+// Si usas Atlas, no es necesario declarar el puerto en el URI
+const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${config.dbHost}/test?retryWrites=true&w=majority`; // prettier-ignore
 
 class MongoLib {
   constructor() {
-    console.log("Logueando password " + PASSWORD);
-    console.log("Logueando la URI " + MONGO_URI);
-
     this.client = new MongoClient(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -48,6 +38,38 @@ class MongoLib {
     return this.connect().then((db) => {
       return db.collection(collection).find(query).toArray();
     });
+  }
+
+  get(collection, id) {
+    return this.connect().then((db) => {
+      return db.collection(collection).findOne({ _id: ObjectId(id) });
+    });
+  }
+
+  create(collection, data) {
+    return this.connect()
+      .then((db) => {
+        return db.collection(collection).insertOne(data);
+      })
+      .then((result) => result.insertedId);
+  }
+
+  update(collection, id, data) {
+    return this.connect()
+      .then((db) => {
+        return db
+          .collection(collection)
+          .updateOne({ _id: ObjectId(id) }, { $set: data }, { upsert: true });
+      })
+      .then((result) => result.upsertedId || id);
+  }
+
+  delete(collection, id) {
+    return this.connect()
+      .then((db) => {
+        return db.collection(collection).deleteOne({ _id: ObjectId(id) });
+      })
+      .then(() => id);
   }
 }
 
