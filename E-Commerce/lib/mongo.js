@@ -7,29 +7,32 @@ const PASSWORD = encodeURIComponent(config.dbPassword);
 // console.log("PASSWORD " + PASSWORD);
 const DB_NAME = config.dbName;
 
-// const MONGO_URI = `mongodb://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/?authSource=${DB_NAME}`;
-
 // Alternative URI
 // Si usas Atlas, no es necesario declarar el puerto en el URI
 const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${config.dbHost}/test?retryWrites=true&w=majority`; // prettier-ignore
 
 class MongoLib {
   constructor() {
+    console.log(MONGO_URI);
     this.client = new MongoClient(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
     this.dbName = DB_NAME;
+    // this.connect();
   }
 
   connect() {
+    console.log("Estamos aqui");
+
     return new Promise((resolve, reject) => {
       this.client.connect((error) => {
         if (error) {
+          console.log(error);
           reject(error);
         }
 
-        debug("Connected succesfully to mongo");
+        console.log("Connected succesfully to mongo");
         resolve(this.client.db(this.dbName));
       });
     });
