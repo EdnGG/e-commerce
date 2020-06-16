@@ -1,7 +1,8 @@
 {
+  "name": "octolion",
   "version": 2,
   "builds": [{ "src": "./index.js", "use": "@now/node-server" }],
-  "routes": [{ "src": "/.*", "dest": "/" }],
+  "routes": [{ "src": "/.*", "dest": "/index.js" }],
   "env": {
     "DB_USER": "@octolion-db-user",
     "DB_PASSWORD": "@octolion-db-password",
